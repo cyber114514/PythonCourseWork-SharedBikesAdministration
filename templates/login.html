@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>共享单车管理系统</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      display: inline-block;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"],
+    input[type="password"] {
+      width: 200px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    input[type="submit"] {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+    function handleSubmit(event) {
+      event.preventDefault();
+      var isAdmin = document.getElementById('option1').checked ? 1 : 0;
+      console.log('是否单车管理员:', isAdmin);
+    }
+  </script>
+</head>
+<body>
+  <h2>共享单车管理系统</h2>
+  <form method="post" action="/login">
+    <label for="username">账号:</label>
+    <input type="text" id="username" name="username">
+    <label for="password">密码:</label>
+    <input type="password" id="password" name="password">
+    <br>
+    <input type="submit" value="登录">
+    <button onclick="location.href='/jump'" type="button">注册</button>
+  </form>
+</body>
+</html>
