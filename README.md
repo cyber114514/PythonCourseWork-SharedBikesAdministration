@@ -21,3 +21,26 @@
 
 #### 5月20号补充:
 1. 链接数据库定义游标过于重复，后期可封装减少冗余
+
+### mysql建表语句
+请首先创建数据库bike，并选为默认数据库，以下是建表语句：
+user：
+CREATE TABLE `user` (
+  `userid` int NOT NULL AUTO_INCREMENT,
+  `position` enum('staff','customer') NOT NULL,
+  `isrenting` tinyint NOT NULL DEFAULT '0',
+  `username` varchar(45) NOT NULL,
+  `password` varchar(45) NOT NULL,
+  PRIMARY KEY (`username`),
+  UNIQUE KEY `userid_UNIQUE` (`userid`),
+  UNIQUE KEY `username_UNIQUE` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+bike：
+CREATE TABLE `bike` (
+  `bikeid` int NOT NULL AUTO_INCREMENT,
+  `rentable` tinyint NOT NULL DEFAULT '1',
+  `userid` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`bikeid`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
