@@ -1,3 +1,10 @@
+---
+pinned: true
+title: 北邮python大作业-共享单车管理系统
+created: '2024-05-13T10:34:23.727Z'
+modified: '2024-05-27T08:50:56.078Z'
+---
+
 ## 北邮python大作业-共享单车管理系统
 ### 功能介绍
 为了实现简单，与课程实验要求更贴近，故改写共享单车管理系统。
@@ -24,7 +31,7 @@
 
 ### mysql建表语句
 请首先创建数据库bike，并选为默认数据库，以下是建表语句：
-user：
+### user：
 CREATE TABLE `user` (
   `userid` int NOT NULL AUTO_INCREMENT,
   `position` enum('staff','customer') NOT NULL,
@@ -36,11 +43,12 @@ CREATE TABLE `user` (
   UNIQUE KEY `username_UNIQUE` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-bike：
+### bike：
 CREATE TABLE `bike` (
   `bikeid` int NOT NULL AUTO_INCREMENT,
   `rentable` tinyint NOT NULL DEFAULT '1',
   `userid` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`bikeid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 
