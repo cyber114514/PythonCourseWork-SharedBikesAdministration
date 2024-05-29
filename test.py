@@ -1,4 +1,13 @@
 import pymysql
+
+DBsetting = {
+    'host': 'localhost',
+    'port': 3306,
+    'user': 'root',
+    'password': 'c4h4f4o4',
+    'charset': 'utf8mb4'
+}
+
 class IsRentingError(Exception):
     def __init__(self,msg):
         self.msg = msg
@@ -17,11 +26,11 @@ class WrongUserError(Exception):
         super().__init__(self.msg)
 def testconnect():
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     print(conn.get_server_info())
     cursor = conn.cursor()
@@ -30,11 +39,11 @@ def testconnect():
 
 def query_for_bike(bikeid):
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -48,11 +57,11 @@ def query_for_bike(bikeid):
 
 def query_for_rent(bikeid,userid):
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -83,11 +92,11 @@ def query_for_rent(bikeid,userid):
 
 def query_for_return(bikeid, userid):
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -121,11 +130,11 @@ def query_for_return(bikeid, userid):
 
 def query_for_add(userid):
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -148,11 +157,11 @@ def query_for_add(userid):
 
 def delete_max_bike(userid):
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -182,11 +191,11 @@ def register(p,uname,pwd):
         print("empty username or password!")
         return False
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -210,11 +219,11 @@ def login(uname,pwd):
         print("empty username or password!")
         return
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
@@ -238,11 +247,11 @@ def login(uname,pwd):
 
 def availablebikes():
     conn = pymysql.connect(
-        host='localhost',
-        port=3306,
-        user='root',
-        password='123456',
-        charset='utf8mb4'
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
     )
     cursor = conn.cursor()
     conn.select_db('bike')
