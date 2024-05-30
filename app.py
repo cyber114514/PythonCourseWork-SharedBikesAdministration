@@ -36,7 +36,10 @@ def login():
     test.testconnect()
     if test.login(username, password):
         available_bikes = test.availablebikes()
-        return render_template('main.html', data=available_bikes)
+        if test.query_for_position(username) == 'customer':
+            return render_template('main.html', data=available_bikes)
+        else:
+            return render_template('main2.html', data=available_bikes)
     else:
         return f'登录失败！'
 
@@ -45,9 +48,13 @@ def login():
 def main():
     available_bikes = test.availablebikes()
     print(available_bikes)
-    # 渲染 main.html 模板，并传递可用车辆数量
     return render_template('main.html', data=available_bikes)
 
+@app.route('/main2')
+def main2():
+    available_bikes = test.availablebikes()
+    print(available_bikes)
+    return render_template('main2.html', data=available_bikes)
 
 if __name__ == '__main__':
     app.run(debug=True)

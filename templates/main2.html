@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>共享单车管理系统主界面</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    .info-box {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #007bff;
+      display: inline-block;
+    }
+    .button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="info-box">
+    目前可用车辆：<span id="data-info">{{ data }}</span>
+  </div>
+  <br>
+  <button class="button" onclick="buttonClicked(1)">新增</button>
+  <button class="button" onclick="buttonClicked(2)">删除</button>
+
+  <script>
+    // 处理按钮点击事件的 JavaScript 函数保持不变
+  </script>
+</body>
+</html>

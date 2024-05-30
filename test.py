@@ -46,6 +46,28 @@ def query_for_bike(bikeid):
     cursor.close()
     conn.close()
 
+def query_for_position(uname):
+    conn = pymysql.connect(
+        host='localhost',
+        port=3306,
+        user='root',
+        password='123456',
+        charset='utf8mb4'
+    )
+    cursor = conn.cursor()
+    conn.select_db('bike')
+    message = f"select position from user where username = '{uname}'"
+    try:
+        cursor.execute(message)
+        result = cursor.fetchall()
+        print(result[0][0])
+        return result[0][0]
+    except Exception as e:
+        print(f'error:{e}')
+    finally:
+        cursor.close()
+        conn.close()
+
 def query_for_rent(bikeid,userid):
     conn = pymysql.connect(
         host='localhost',
@@ -250,5 +272,6 @@ def availablebikes():
     cursor.execute(query)
     result = cursor.fetchall()
     available_bikes = int(result[0][0])
-    print(available_bikes )
+    print(available_bikes)
     return available_bikes
+
