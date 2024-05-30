@@ -61,7 +61,7 @@ def img():
     if not img_base64:
         print("Failed to receive image data")
     else:
-        print("Received image data:", img_base64[:100])  # Print first 100 characters for debugging
+        print("Received image data:", img_base64[:20])  # Print first 100 characters for debugging
     return render_template('img.html', img_data=img_base64)
 
 if __name__ == '__main__':
