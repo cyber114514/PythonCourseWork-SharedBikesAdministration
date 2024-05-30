@@ -1,28 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>可视化生成图片</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Generated Image</title>
 </head>
-
 <body>
-    <script>
-        $(document).ready(function() {
-            // 设置定时器，每隔一段时间发送获取图表数据的请求
-            setInterval(function() {
-                $.ajax({
-                    type: 'POST',
-                    url: '/img',
-                    success: function(response) {
-                        // 将图表显示在页面上
-                        $('#plot-container').html('<img src="data:image/png;base64,' + response.img_base64 + '">');
-                    }
-                });
-            }, 500); // 在这里设置请求间隔的时间，单位为毫秒
-        });
-    </script>
+    <h1>Generated Image</h1>
+    {% if img_data %}
+        <img src="data:image/png;base64,{{ data }}" alt="Generated Image">
+    {% else %}
+        <p>No image data available.</p>
+    {% endif %}
 </body>
 </html>

@@ -3,8 +3,8 @@ import pymysql
 DBsetting = {
     'host': 'localhost',
     'port': 3306,
-    'user': 'root',
-    'password': 'c4h4f4o4',
+    'user': 'flaskuser',
+    'password': '123456',
     'charset': 'utf8mb4'
 }
 

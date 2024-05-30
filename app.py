@@ -1,5 +1,7 @@
 from flask import Flask, request, render_template, redirect
-
+from stats import generate_img
+from multiprocessing import Process
+from multiprocessing import Process, Pipe
 import test
 
 app = Flask(__name__)
@@ -48,6 +50,19 @@ def main():
     # 渲染 main.html 模板，并传递可用车辆数量
     return render_template('main.html', data=available_bikes)
 
+@app.route('/img')
+def img():
+    parent_conn, child_conn = Pipe()
+    p_img = Process(target = generate_img, args=(child_conn,))
+    p_img.start()
+    img_base64 = parent_conn.recv()
+    p_img.join()
+    
+    if not img_base64:
+        print("Failed to receive image data")
+    else:
+        print("Received image data:", img_base64[:100])  # Print first 100 characters for debugging
+    return render_template('img.html', img_data=img_base64)
 
 if __name__ == '__main__':
     app.run(debug=True)
