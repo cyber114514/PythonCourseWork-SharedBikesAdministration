@@ -29,11 +29,9 @@
     目前可用车辆：<span id="data-info">{{ data }}</span>
   </div>
   <br>
-  <button class="button" onclick="buttonClicked(1)">新增</button>
-  <button class="button" onclick="buttonClicked(2)">删除</button>
-
-  <script>
-    // 处理按钮点击事件的 JavaScript 函数保持不变
-  </script>
+  <form method="post">
+    <button name="action" value="add" class="button">新增</button>
+    <button name="action" value="del" class="button">删除</button>
+  </form>
 </body>
 </html>
