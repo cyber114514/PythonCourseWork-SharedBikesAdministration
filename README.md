@@ -29,8 +29,18 @@ modified: '2024-05-27T08:50:56.078Z'
 #### 5月20号补充:
 1. 链接数据库定义游标过于重复，后期可封装减少冗余
 
+#### 5月30号日志:
+队友做出了订单记录和计算费用系统<br>
+目前基础flask程序已经构建完毕，包括功能注册登录、租赁归还、增加删除，能够在flask网页上正常工作。
+##### 后续计划：
+数据可视化：matplotlib，结合订单数据库显示订单时间段（设想）
+减少数据库操作函数库部分（test.py）的代码冗余（我来弄）
+
+#### 5月31号凌晨:
+通过建立一个数据库链接管理类，不必在每个函数中创建新的链接，大大降低了代码冗余度。
+
 ### mysql建表语句
-请首先创建数据库bike，并选为默认数据库，以下是建表语句：
+请首先创建数据库bike，并选为默认数据库，以下是建表语句：（新增orders表）
 ### user：
 CREATE TABLE `user` (
   `userid` int NOT NULL AUTO_INCREMENT,
@@ -51,4 +61,14 @@ CREATE TABLE `bike` (
   PRIMARY KEY (`bikeid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-
+### orders
+CREATE TABLE `orders` (
+  `orderid` int NOT NULL AUTO_INCREMENT,
+  `userid` int DEFAULT NULL,
+  `bikeid` int DEFAULT NULL,
+  `start_time` datetime DEFAULT NULL,
+  `end_time` datetime DEFAULT NULL,
+  `total_time` float DEFAULT NULL,
+  `total_cost` float DEFAULT NULL,
+  PRIMARY KEY (`orderid`)
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
