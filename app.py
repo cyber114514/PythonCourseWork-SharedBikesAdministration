@@ -1,6 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
 from stats import generate_img
-from multiprocessing import Process
 from multiprocessing import Process, Pipe
 import test
 
@@ -53,19 +52,18 @@ def main():
 @app.route('/select', methods=['GET', 'POST'])
 def select_data():
     if request.method == 'POST':
-        selected_data = request.form['data_selection']
-        return redirect(url_for('img', data_selection=selected_data))
+        return redirect(url_for('img', data_selection=request.form['data_selection']))
+    
     else:
-        data_options = test.get_data_options()
-        return render_template('select.html', data_options=data_options)
+        return render_template('select.html', data_options=test.get_data_options())
 
 @app.route('/img')
 def img():
-    data_selection = request.args.get('data_selection')
-    data = test.get_data_for_image(data_selection)
+    data = test.get_data_for_image(request.args.get('data_selection'))
 
     parent_conn, child_conn = Pipe()
     p_img = Process(target=generate_img, args=(child_conn, data))
+
     p_img.start()
     img_base64 = parent_conn.recv()
     p_img.join()
