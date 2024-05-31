@@ -59,13 +59,11 @@ def select_data():
         data_options = test.get_data_options()
         return render_template('select.html', data_options=data_options)
 
-
-
 @app.route('/img')
 def img():
     data_selection = request.args.get('data_selection')
     data = test.get_data_for_image(data_selection)
-    print(f"Selected data: {data}")  # Debug information
+
     parent_conn, child_conn = Pipe()
     p_img = Process(target=generate_img, args=(child_conn, data))
     p_img.start()
@@ -76,7 +74,6 @@ def img():
         return "Failed to receive image data"
     
     return render_template('img.html', img_data=img_base64)
-
 
 if __name__ == '__main__':
     app.run(debug=True)
