@@ -261,3 +261,24 @@ def availablebikes():
     available_bikes = int(result[0][0])
     print(available_bikes )
     return available_bikes
+
+def get_data_options():
+    # 从数据库获取数据选项
+    data_options = [
+        {'id': 1, 'name': 'Data Set 1'},
+        {'id': 2, 'name': 'Data Set 2'},
+        {'id': 3, 'name': 'Data Set 3'}
+    ]
+    return data_options
+
+def get_data_for_image(data_id):
+    # 根据选择的数据ID从数据库获取数据
+    if data_id == '1':
+        data = {'x': [1, 2, 3, 4, 5], 'y': [2, 3, 5, 7, 11]}
+    elif data_id == '2':
+        data = {'x': [1, 2, 3, 4, 5], 'y': [1, 4, 9, 16, 25]}
+    elif data_id == '3':
+        data = {'x': [1, 2, 3, 4, 5], 'y': [5, 10, 15, 20, 25]}
+    else:
+        data = {'x': [], 'y': []}
+    return data

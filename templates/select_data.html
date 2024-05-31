@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Data</title>
+</head>
+<body>
+    <h1>Select Data to Generate Image</h1>
+    <form method="POST">
+        <label for="data_selection">Choose a data set:</label>
+        <select id="data_selection" name="data_selection">
+            {% for option in data_options %}
+            <option value="{{ option.id }}">{{ option.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Generate Image</button>
+    </form>
+</body>
+</html>
