@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect
+from flask import Flask, request, render_template, redirect, url_for
 from stats import generate_img
 from multiprocessing import Process
 from multiprocessing import Process, Pipe
@@ -50,30 +50,33 @@ def main():
     # 渲染 main.html 模板，并传递可用车辆数量
     return render_template('main.html', data=available_bikes)
 
-@app.route('/select_data', methods=['GET', 'POST'])
+@app.route('/select', methods=['GET', 'POST'])
 def select_data():
     if request.method == 'POST':
         selected_data = request.form['data_selection']
         return redirect(url_for('img', data_selection=selected_data))
     else:
         data_options = test.get_data_options()
-        return render_template('select_data.html', data_options=data_options)
+        return render_template('select.html', data_options=data_options)
 
 
-@app.route('/img' , methods=['GET', 'POST'])
+
+@app.route('/img')
 def img():
+    data_selection = request.args.get('data_selection')
+    data = test.get_data_for_image(data_selection)
+    print(f"Selected data: {data}")  # Debug information
     parent_conn, child_conn = Pipe()
-    p_img = Process(target = generate_img, args=(child_conn,))
+    p_img = Process(target=generate_img, args=(child_conn, data))
     p_img.start()
     img_base64 = parent_conn.recv()
     p_img.join()
 
     if not img_base64:
-        print("Failed to receive image data")
-    else:
-        print("Received image data:", img_base64[:20])  # 输出base64前20个字符
-
+        return "Failed to receive image data"
+    
     return render_template('img.html', img_data=img_base64)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
