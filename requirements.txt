@@ -1,0 +1,6 @@
+Flask
+matplotlib
+pandas
+PyMySQL
+seaborn
+statsmodels==0.14.2

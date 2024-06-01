@@ -56,13 +56,13 @@ def select_data():
     else:
         return render_template('select.html', data_options=test.get_data_options())
 
-@app.route('/img')
+@app.route('/img', methods=['GET'])
 def img():
     data, x_label, y_label, title, chart_type = test.get_data_for_image(request.args.get('data_selection'))
 
     parent_conn, child_conn = Pipe()
+    
     p_img = Process(target=generate_img, args=(child_conn, data, x_label, y_label, title, chart_type))
-
     p_img.start()
     img_base64 = parent_conn.recv()
     p_img.join()
@@ -74,17 +74,17 @@ def img():
 
 @app.route('/predict')
 def predict():
+    data = do_predict(test.get_data_for_predict())
+
     parent_conn, child_conn = Pipe()
-    data = do_predict(child_conn, test.get_data_for_predict())
-
     p_img = Process(target=generate_img, args=(child_conn, data, '日期', '订单数', '未来30天订单数预测', 'line'))
-
     p_img.start()
     img_base64 = parent_conn.recv()
     p_img.join()
 
     if not img_base64:
         return "Failed to receive image data"
+
     return render_template('img.html', img_data=img_base64)
 
 if __name__ == '__main__':

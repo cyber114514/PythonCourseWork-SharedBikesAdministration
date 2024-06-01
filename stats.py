@@ -15,7 +15,7 @@ def generate_img(pipe_conn, data, x_label, y_label, title, chart_type):
         y = data['y']
         df = pd.DataFrame({'x': x, 'y': y})
 
-        plt.figure(figsize=(12,9))
+        plt.figure(figsize=(9,7))
 
         if chart_type == 'line':
             sns.lineplot(x='x', y='y', data=df)
@@ -41,12 +41,13 @@ def generate_img(pipe_conn, data, x_label, y_label, title, chart_type):
         img_base64 = base64.b64encode(img.getvalue()).decode()
         pipe_conn.send(img_base64)
         pipe_conn.close()
+
     except Exception as e:
         pipe_conn.send("")
         pipe_conn.close()
         raise e
     
-def do_predict(pipe_conn, data):
+def do_predict(data):
     try:
         df = pd.DataFrame({'x': data['x'], 'y': data['y']})
         df['x'] = pd.to_datetime(df['x'])
@@ -55,21 +56,14 @@ def do_predict(pipe_conn, data):
         # 使用 ARIMA 模型进行预测
         model = ARIMA(df['y'], order=(5, 1, 0))  # (p, d, q) 这里是一个简单的 ARIMA 模型参数
         model_fit = model.fit()
-
-        # 预测未来30天
         forecast_steps = 30
         forecast = model_fit.forecast(steps=forecast_steps)[0]
 
-        # 创建预测日期
         last_date = df.index[-1]
         forecast_dates = [last_date + pd.Timedelta(days=i) for i in range(1, forecast_steps + 1)]
-
         forecast_data = {'x': forecast_dates, 'y': forecast.tolist()}
 
         return forecast_data
-    except Exception as e:
-        # 发送空字符串表示出现错误
-        pipe_conn.send("")
-        pipe_conn.close()
-        raise e
     
+    except Exception as e:
+        return ''
