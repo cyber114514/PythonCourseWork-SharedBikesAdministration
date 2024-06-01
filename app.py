@@ -53,7 +53,6 @@ def main():
 def select_data():
     if request.method == 'POST':
         return redirect(url_for('img', data_selection=request.form['data_selection']))
-    
     else:
         return render_template('select.html', data_options=test.get_data_options())
 

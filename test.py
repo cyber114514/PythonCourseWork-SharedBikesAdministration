@@ -265,20 +265,41 @@ def availablebikes():
 def get_data_options():
     # 从数据库获取数据选项
     data_options = [
-        {'id': 1, 'name': 'Data Set 1'},
-        {'id': 2, 'name': 'Data Set 2'},
-        {'id': 3, 'name': 'Data Set 3'}
+        {'id': 1, 'name': '订单的费用分布'},
+        {'id': 2, 'name': '订单的租赁时间分布'},
+        {'id': 3, 'name': '每天的订单数量'}
     ]
     return data_options
 
 def get_data_for_image(data_id):
+    conn = pymysql.connect(
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
+    )
+    cursor = conn.cursor()
+    conn.select_db('bike')
+
     # 根据选择的数据ID从数据库获取数据
-    if data_id == '1':
-        data = {'x': [1, 2, 3, 4, 5], 'y': [2, 3, 5, 7, 11]}
+    if data_id == '1': 
+        query = f'SELECT orderid, total_cost FROM orders'
+        cursor.execute(query)
+        result = cursor.fetchall()
+        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+
     elif data_id == '2':
-        data = {'x': [1, 2, 3, 4, 5], 'y': [1, 4, 9, 16, 25]}
+        query = f'SELECT orderid, total_time FROM orders'
+        cursor.execute(query)
+        result = cursor.fetchall()
+        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+
     elif data_id == '3':
-        data = {'x': [1, 2, 3, 4, 5], 'y': [5, 10, 15, 20, 25]}
+        query = f'SELECT DATE(start_time) as order_date, COUNT(*) as order_count FROM orders GROUP BY DATE(start_time)'
+        cursor.execute(query)
+        result = cursor.fetchall()
+        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
     else:
         data = {'x': [], 'y': []}
     return data
