@@ -325,5 +325,28 @@ def get_data_for_image(data_id):
 
     cursor.close()
     conn.close()
-
     return data, x_label, y_label, title, chart_type
+
+def get_data_for_predict():
+    conn = pymysql.connect(
+        host = DBsetting['host'],
+        port = DBsetting['port'],
+        user = DBsetting['user'],
+        password = DBsetting['password'],
+        charset = DBsetting['charset']
+    )
+    cursor = conn.cursor()
+    conn.select_db('bike')
+    query = '''
+        SELECT DATE(start_time) AS order_date, COUNT(*) AS order_count 
+        FROM orders 
+        GROUP BY DATE(start_time) 
+        ORDER BY order_date
+    '''
+    cursor.execute(query)
+    result = cursor.fetchall()
+    data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+
+    cursor.close()
+    conn.close()
+    return data

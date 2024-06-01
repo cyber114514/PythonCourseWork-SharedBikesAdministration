@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, redirect, url_for
-from stats import generate_img
+from stats import generate_img, do_predict
 from multiprocessing import Process, Pipe
 import test
 
@@ -70,6 +70,21 @@ def img():
     if not img_base64:
         return "Failed to receive image data"
     
+    return render_template('img.html', img_data=img_base64)
+
+@app.route('/predict')
+def predict():
+    parent_conn, child_conn = Pipe()
+    data = do_predict(child_conn, test.get_data_for_predict())
+
+    p_img = Process(target=generate_img, args=(child_conn, data, '日期', '订单数', '未来30天订单数预测', 'line'))
+
+    p_img.start()
+    img_base64 = parent_conn.recv()
+    p_img.join()
+
+    if not img_base64:
+        return "Failed to receive image data"
     return render_template('img.html', img_data=img_base64)
 
 if __name__ == '__main__':
