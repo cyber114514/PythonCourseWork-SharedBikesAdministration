@@ -282,24 +282,48 @@ def get_data_for_image(data_id):
     cursor = conn.cursor()
     conn.select_db('bike')
 
+    """
+    x_label = '默认'
+    y_label = '默认'
+    title = '默认'
+    chart_type = 'plot'
+    """
+
     # 根据选择的数据ID从数据库获取数据
     if data_id == '1': 
         query = f'SELECT orderid, total_cost FROM orders'
         cursor.execute(query)
         result = cursor.fetchall()
         data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+        x_label = '订单ID'
+        y_label = '费用'
+        title = '订单的费用分布'
+        chart_type = 'scatter'
 
     elif data_id == '2':
         query = f'SELECT orderid, total_time FROM orders'
         cursor.execute(query)
         result = cursor.fetchall()
         data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+        x_label = '订单ID'
+        y_label = '租赁时间'
+        title = '订单的租赁时间分布'
+        chart_type = 'scatter'
 
     elif data_id == '3':
         query = f'SELECT DATE(start_time) as order_date, COUNT(*) as order_count FROM orders GROUP BY DATE(start_time)'
         cursor.execute(query)
         result = cursor.fetchall()
         data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+        x_label = '日期'
+        y_label = '订单数量'
+        title = '每天的订单数量'
+        chart_type = 'line'
+
     else:
         data = {'x': [], 'y': []}
-    return data
+
+    cursor.close()
+    conn.close()
+
+    return data, x_label, y_label, title, chart_type

@@ -58,10 +58,10 @@ def select_data():
 
 @app.route('/img')
 def img():
-    data = test.get_data_for_image(request.args.get('data_selection'))
+    data, x_label, y_label, title, chart_type = test.get_data_for_image(request.args.get('data_selection'))
 
     parent_conn, child_conn = Pipe()
-    p_img = Process(target=generate_img, args=(child_conn, data))
+    p_img = Process(target=generate_img, args=(child_conn, data, x_label, y_label, title, chart_type))
 
     p_img.start()
     img_base64 = parent_conn.recv()

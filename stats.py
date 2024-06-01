@@ -1,22 +1,37 @@
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 设置中文字体为黑体
 
 import seaborn as sns
 import pandas as pd
 import io
 import base64
 
-def generate_img(pipe_conn, data):
+def generate_img(pipe_conn, data, x_label, y_label, title, chart_type):
     try:
         x = data['x']
         y = data['y']
         df = pd.DataFrame({'x': x, 'y': y})
 
-        sns.lineplot(x='x', y='y', data=df)
-        plt.title("Data Plot from Database")
-        plt.xlabel("X Axis")
-        plt.ylabel("Y Axis")
+        plt.figure(figsize=(12,9))
+
+        if chart_type == 'line':
+            sns.lineplot(x='x', y='y', data=df)
+        elif chart_type == 'bar':
+            sns.barplot(x='x', y='y', data=df)
+        elif chart_type == 'scatter':
+            sns.scatterplot(x='x', y='y', data=df)
+        elif chart_type == 'hist':
+            sns.histplot(df['y'])
+        elif chart_type == 'box':
+            sns.boxplot(y='y', data=df)
+        else:
+            sns.lineplot(x='x', y='y', data=df)
+
+        plt.title(title)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
 
         img = io.BytesIO()
         plt.savefig(img, format='png')
