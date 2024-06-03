@@ -1,10 +1,11 @@
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, session, flash
 from stats import generate_img, do_predict
 from multiprocessing import Process, Pipe
+
 import test
 
 app = Flask(__name__)
-
+app.secret_key = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
 
 @app.route('/')
 def index():
@@ -28,7 +29,7 @@ def register():
     else:
         return f'注册失败！'
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['POST','GET'])
 def login():
     username = request.form['username']
     password = request.form['password']
@@ -36,17 +37,27 @@ def login():
     print(f'密码: {password}')
     test.testconnect()
     if test.login(username, password):
-        available_bikes = test.availablebikes()
-        return render_template('main.html', data=available_bikes)
+        session['username'] = username
+        if test.query_for_position(username) == 'customer':
+            return redirect(url_for('main'))
+        else:
+            return redirect(url_for('main2'))
     else:
         return f'登录失败！'
 
-
-@app.route('/main')
+@app.route('/main', methods=['GET','POST'])
 def main():
+    username = session.get('username')
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'rent':
+            if test.rent(username):
+                return redirect(url_for('main'))
+        elif action == 'return':
+            if test.returnbike(username):
+                return redirect(url_for('main'))
     available_bikes = test.availablebikes()
     print(available_bikes)
-    # 渲染 main.html 模板，并传递可用车辆数量
     return render_template('main.html', data=available_bikes)
 
 @app.route('/select', methods=['GET', 'POST'])
@@ -86,6 +97,21 @@ def predict():
         return "Failed to receive image data"
 
     return render_template('img.html', img_data=img_base64)
+
+@app.route('/main2', methods=['GET','POST'])
+def main2():
+    username = session.get('username')
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'add':
+            if test.add_del(username,1):
+                return redirect(url_for('main2'))
+        elif action == 'del':
+            if test.add_del(username,2):
+                return redirect(url_for('main2'))
+    available_bikes = test.availablebikes()
+    print(available_bikes)
+    return render_template('main2.html', data=available_bikes)
 
 if __name__ == '__main__':
     app.run(debug=True)
