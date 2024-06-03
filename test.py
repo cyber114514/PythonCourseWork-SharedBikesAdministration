@@ -301,7 +301,6 @@ def get_data_for_image(data_id):
 
         else:
             data = {'x': [], 'y': []}
-    
     lock.release()
     return data, x_label, y_label, title, chart_type
 
