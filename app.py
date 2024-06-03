@@ -122,5 +122,9 @@ def main2():
     print(available_bikes)
     return render_template('main2.html', data=available_bikes)
 
+@app.errorhandler(403)
+def handle_bad_request(e):
+    return '错误请求', 403   #返回错误信息
+
 if __name__ == '__main__':
     app.run(debug=True)
