@@ -264,13 +264,6 @@ def get_data_options():
 def get_data_for_image(data_id):
     lock.acquire()
     with Database() as db:
-        """
-        x_label = '默认'
-        y_label = '默认'
-        title = '默认'
-        chart_type = 'plot'
-        """
-
         # 根据选择的数据ID从数据库获取数据
         if data_id == '1': 
             query = f'SELECT orderid, total_cost FROM orders'
