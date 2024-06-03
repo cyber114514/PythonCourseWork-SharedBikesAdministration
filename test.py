@@ -1,4 +1,7 @@
 import pymysql
+import threading
+
+lock = threading.Lock()
 
 DBsetting = {
     'host': 'localhost',
@@ -7,6 +10,7 @@ DBsetting = {
     'password': '123456',
     'charset': 'utf8mb4'
 }
+
 
 class IsRentingError(Exception):
     def __init__(self,msg):
@@ -272,6 +276,9 @@ def get_data_options():
     return data_options
 
 def get_data_for_image(data_id):
+
+    lock.acquire()
+
     conn = pymysql.connect(
         host = DBsetting['host'],
         port = DBsetting['port'],
@@ -325,9 +332,15 @@ def get_data_for_image(data_id):
 
     cursor.close()
     conn.close()
+
+    lock.release()
+
     return data, x_label, y_label, title, chart_type
 
 def get_data_for_predict():
+    
+    lock.acquire()
+
     conn = pymysql.connect(
         host = DBsetting['host'],
         port = DBsetting['port'],
@@ -349,4 +362,7 @@ def get_data_for_predict():
 
     cursor.close()
     conn.close()
+
+    lock.release()
+
     return data
