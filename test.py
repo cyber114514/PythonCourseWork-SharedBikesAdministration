@@ -4,14 +4,6 @@ from datetime import datetime, timedelta
 
 lock = threading.Lock()
 
-DBsetting = {
-    'host': 'localhost',
-    'port': 3306,
-    'user': 'flaskuser',
-    'password': '123456',
-    'charset': 'utf8mb4'
-}
-
 class IsRentingError(Exception):
     def __init__(self,msg):
         self.msg = msg
@@ -46,7 +38,7 @@ class Database:
         self.conn = pymysql.connect(
             host='localhost',
             port=3306,
-            user='root',
+            user='flaskuser',
             password='123456',
             charset='utf8mb4',
             db='bike'
