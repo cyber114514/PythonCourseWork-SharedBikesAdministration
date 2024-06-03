@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, redirect, url_for, session, flash
+from flask import Flask, request, render_template, redirect, url_for, session, flash, abort
 from stats import generate_img, do_predict
 from multiprocessing import Process, Pipe
 
@@ -69,6 +69,12 @@ def select_data():
 
 @app.route('/img', methods=['GET'])
 def img():
+    allowed_referers = {
+    url_for('predict', _external=True),
+    url_for('select_data', _external=True)
+    }
+    referer = request.headers.get('Referer')
+
     data, x_label, y_label, title, chart_type = test.get_data_for_image(request.args.get('data_selection'))
 
     parent_conn, child_conn = Pipe()
@@ -81,7 +87,10 @@ def img():
     if not img_base64:
         return "Failed to receive image data"
     
-    return render_template('img.html', img_data=img_base64)
+    if referer in allowed_referers:
+        return render_template('img.html', img_data=img_base64)
+    else:
+        abort(403)
 
 @app.route('/predict')
 def predict():
