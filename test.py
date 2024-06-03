@@ -270,95 +270,61 @@ def get_data_options():
     return data_options
 
 def get_data_for_image(data_id):
-
     lock.acquire()
+    with Database() as db:
+        """
+        x_label = '默认'
+        y_label = '默认'
+        title = '默认'
+        chart_type = 'plot'
+        """
 
-    conn = pymysql.connect(
-        host = DBsetting['host'],
-        port = DBsetting['port'],
-        user = DBsetting['user'],
-        password = DBsetting['password'],
-        charset = DBsetting['charset']
-    )
-    cursor = conn.cursor()
-    conn.select_db('bike')
+        # 根据选择的数据ID从数据库获取数据
+        if data_id == '1': 
+            query = f'SELECT orderid, total_cost FROM orders'
+            result = db.query(query)
+            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+            x_label = '订单ID'
+            y_label = '费用'
+            title = '订单的费用分布'
+            chart_type = 'scatter'
 
-    """
-    x_label = '默认'
-    y_label = '默认'
-    title = '默认'
-    chart_type = 'plot'
-    """
+        elif data_id == '2':
+            query = f'SELECT orderid, total_time FROM orders'
+            result = db.query(query)
+            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+            x_label = '订单ID'
+            y_label = '租赁时间'
+            title = '订单的租赁时间分布'
+            chart_type = 'scatter'
 
-    # 根据选择的数据ID从数据库获取数据
-    if data_id == '1': 
-        query = f'SELECT orderid, total_cost FROM orders'
-        cursor.execute(query)
-        result = cursor.fetchall()
-        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-        x_label = '订单ID'
-        y_label = '费用'
-        title = '订单的费用分布'
-        chart_type = 'scatter'
+        elif data_id == '3':
+            query = f'SELECT DATE(start_time) as order_date, COUNT(*) as order_count FROM orders GROUP BY DATE(start_time)'
+            result = db.query(query)
+            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+            x_label = '日期'
+            y_label = '订单数量'
+            title = '每天的订单数量'
+            chart_type = 'line'
 
-    elif data_id == '2':
-        query = f'SELECT orderid, total_time FROM orders'
-        cursor.execute(query)
-        result = cursor.fetchall()
-        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-        x_label = '订单ID'
-        y_label = '租赁时间'
-        title = '订单的租赁时间分布'
-        chart_type = 'scatter'
-
-    elif data_id == '3':
-        query = f'SELECT DATE(start_time) as order_date, COUNT(*) as order_count FROM orders GROUP BY DATE(start_time)'
-        cursor.execute(query)
-        result = cursor.fetchall()
-        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-        x_label = '日期'
-        y_label = '订单数量'
-        title = '每天的订单数量'
-        chart_type = 'line'
-
-    else:
-        data = {'x': [], 'y': []}
-
-    cursor.close()
-    conn.close()
-
+        else:
+            data = {'x': [], 'y': []}
+    
     lock.release()
-
     return data, x_label, y_label, title, chart_type
 
 def get_data_for_predict():
-    
     lock.acquire()
-
-    conn = pymysql.connect(
-        host = DBsetting['host'],
-        port = DBsetting['port'],
-        user = DBsetting['user'],
-        password = DBsetting['password'],
-        charset = DBsetting['charset']
-    )
-    cursor = conn.cursor()
-    conn.select_db('bike')
-    query = '''
-        SELECT DATE(start_time) AS order_date, COUNT(*) AS order_count 
-        FROM orders 
-        GROUP BY DATE(start_time) 
-        ORDER BY order_date
-    '''
-    cursor.execute(query)
-    result = cursor.fetchall()
-    data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-
-    cursor.close()
-    conn.close()
-
+    with Database() as db:
+        query = '''
+            SELECT DATE(start_time) AS order_date, COUNT(*) AS order_count 
+            FROM orders 
+            GROUP BY DATE(start_time) 
+            ORDER BY order_date
+        '''
+        result = db.query(query)
+        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
     lock.release()
-
     return data
 
 mock_now = datetime.now()
