@@ -22,11 +22,12 @@ class WrongUserError(Exception):
         super().__init__(self.msg)
 def testconnect():
     conn = pymysql.connect(
-        host = DBsetting['host'],
-        port = DBsetting['port'],
-        user = DBsetting['user'],
-        password = DBsetting['password'],
-        charset = DBsetting['charset']
+        host='localhost',
+            port=3306,
+            user='flaskuser',
+            password='123456',
+            charset='utf8mb4',
+            db='bike'
     )
     print(conn.get_server_info())
     cursor = conn.cursor()
