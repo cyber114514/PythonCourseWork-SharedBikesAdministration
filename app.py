@@ -1,9 +1,11 @@
-from flask import Flask, request, render_template, redirect, url_for, session, flash
-
+from flask import Flask, request, render_template, redirect
+from stats import generate_img
+from multiprocessing import Process
+from multiprocessing import Process, Pipe
 import test
 
 app = Flask(__name__)
-app.secret_key = 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+
 
 @app.route('/')
 def index():
@@ -27,7 +29,7 @@ def register():
     else:
         return f'注册失败！'
 
-@app.route('/login', methods=['POST','GET'])
+@app.route('/login', methods=['POST'])
 def login():
     username = request.form['username']
     password = request.form['password']
@@ -35,44 +37,32 @@ def login():
     print(f'密码: {password}')
     test.testconnect()
     if test.login(username, password):
-        session['username'] = username
-        if test.query_for_position(username) == 'customer':
-            return redirect(url_for('main'))
-        else:
-            return redirect(url_for('main2'))
+        available_bikes = test.availablebikes()
+        return render_template('main.html', data=available_bikes)
     else:
         return f'登录失败！'
 
-@app.route('/main', methods=['GET','POST'])
+
+@app.route('/main')
 def main():
-    username = session.get('username')
-    if request.method == 'POST':
-        action = request.form.get('action')
-        if action == 'rent':
-            if test.rent(username):
-                return redirect(url_for('main'))
-        elif action == 'return':
-            if test.returnbike(username):
-                return redirect(url_for('main'))
     available_bikes = test.availablebikes()
     print(available_bikes)
+    # 渲染 main.html 模板，并传递可用车辆数量
     return render_template('main.html', data=available_bikes)
 
-@app.route('/main2', methods=['GET','POST'])
-def main2():
-    username = session.get('username')
-    if request.method == 'POST':
-        action = request.form.get('action')
-        if action == 'add':
-            if test.add_del(username,1):
-                return redirect(url_for('main2'))
-        elif action == 'del':
-            if test.add_del(username,2):
-                return redirect(url_for('main2'))
-    available_bikes = test.availablebikes()
-    print(available_bikes)
-    return render_template('main2.html', data=available_bikes)
+@app.route('/img')
+def img():
+    parent_conn, child_conn = Pipe()
+    p_img = Process(target = generate_img, args=(child_conn,))
+    p_img.start()
+    img_base64 = parent_conn.recv()
+    p_img.join()
+    
+    if not img_base64:
+        print("Failed to receive image data")
+    else:
+        print("Received image data:", img_base64[:20])  # Print first 100 characters for debugging
+    return render_template('img.html', img_data=img_base64)
 
 if __name__ == '__main__':
     app.run(debug=True)
-

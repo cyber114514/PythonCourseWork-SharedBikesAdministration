@@ -33,3 +33,6 @@ pip-delete-this-directory.txt
 # Windows:
 Thumbs.db
 Desktop.ini
+
+#我自己测试用的
+.ipynb

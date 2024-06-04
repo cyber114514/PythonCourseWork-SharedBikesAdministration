@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generated Image</title>
+</head>
+<body>
+    <h1>Generated Image</h1>
+    {% if img_data %}
+        <img src="data:image/png;base64,{{ img_data }}" alt="Generated Image">
+    {% else %}
+        <p>No image data available.</p>
+    {% endif %}
+</body>
+</html>
