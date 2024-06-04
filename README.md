@@ -50,33 +50,33 @@ modified: '2024-05-27T08:50:56.078Z'
 ### mysql建表语句
 请首先创建数据库bike，并选为默认数据库，以下是建表语句：（新增orders表）
 ### user：
-CREATE TABLE `user` (
-  `userid` int NOT NULL AUTO_INCREMENT,
-  `position` enum('staff','customer') NOT NULL,
-  `isrenting` tinyint NOT NULL DEFAULT '0',
-  `username` varchar(45) NOT NULL,
-  `password` varchar(45) NOT NULL,
-  PRIMARY KEY (`username`),
-  UNIQUE KEY `userid_UNIQUE` (`userid`),
-  UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `user` (<br>
+  `userid` int NOT NULL AUTO_INCREMENT,<br>
+  `position` enum('staff','customer') NOT NULL,<br>
+  `isrenting` tinyint NOT NULL DEFAULT '0',<br>
+  `username` varchar(45) NOT NULL,<br>
+  `password` varchar(45) NOT NULL,<br>
+  PRIMARY KEY (`username`),<br>
+  UNIQUE KEY `userid_UNIQUE` (`userid`),<br>
+  UNIQUE KEY `username_UNIQUE` (`username`)<br>
+) ENGINE=InnoDB AUTO_INCREMENT=57 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;<br>
 
 ### bike：
-CREATE TABLE `bike` (
-  `bikeid` int NOT NULL AUTO_INCREMENT,
-  `rentable` tinyint NOT NULL DEFAULT '1',
-  `userid` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`bikeid`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `bike` (<br>
+  `bikeid` int NOT NULL AUTO_INCREMENT,<br>
+  `rentable` tinyint NOT NULL DEFAULT '1',<br>
+  `userid` varchar(45) DEFAULT NULL,<br>
+  PRIMARY KEY (`bikeid`)<br>
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;<br>
 
 ### orders
-CREATE TABLE `orders` (
-  `orderid` int NOT NULL AUTO_INCREMENT,
-  `userid` int DEFAULT NULL,
-  `bikeid` int DEFAULT NULL,
-  `start_time` datetime DEFAULT NULL,
-  `end_time` datetime DEFAULT NULL,
-  `total_time` float DEFAULT NULL,
-  `total_cost` float DEFAULT NULL,
-  PRIMARY KEY (`orderid`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `orders` (<br>
+  `orderid` int NOT NULL AUTO_INCREMENT,<br>
+  `userid` int DEFAULT NULL,<br>
+  `bikeid` int DEFAULT NULL,<br>
+  `start_time` datetime DEFAULT NULL,<br>
+  `end_time` datetime DEFAULT NULL,<br>
+  `total_time` float DEFAULT NULL,<br>
+  `total_cost` float DEFAULT NULL,<br>
+  PRIMARY KEY (`orderid`)<br>
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;<br>
