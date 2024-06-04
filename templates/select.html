@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select Data</title>
+</head>
+<body>
+    <h1>请选择你想查看的数据可视化指标</h1>
+    <form method="POST">
+        <label for="data_selection">请选择:</label>
+        <select id="data_selection" name="data_selection">
+            {% for option in data_options %}
+            <option value="{{ option.id }}">{{ option.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">确定</button>
+    </form>
+</body>
+</html>
