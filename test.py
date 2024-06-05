@@ -23,11 +23,11 @@ class WrongUserError(Exception):
 def testconnect():
     conn = pymysql.connect(
         host='localhost',
-            port=3306,
-            user='flaskuser',
-            password='123456',
-            charset='utf8mb4',
-            db='bike'
+        port=3306,
+        user='root',
+        password='123456',
+        charset='utf8mb4',
+        db='bike'
     )
     print(conn.get_server_info())
     cursor = conn.cursor()
@@ -39,7 +39,7 @@ class Database:
         self.conn = pymysql.connect(
             host='localhost',
             port=3306,
-            user='flaskuser',
+            user='root',
             password='123456',
             charset='utf8mb4',
             db='bike'

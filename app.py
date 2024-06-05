@@ -56,9 +56,28 @@ def main():
         elif action == 'return':
             if test.returnbike(username):
                 return redirect(url_for('main'))
+        elif action == 'select':
+            return redirect(url_for('select_data'))
     available_bikes = test.availablebikes()
     print(available_bikes)
     return render_template('main.html', data=available_bikes)
+
+@app.route('/main2', methods=['GET','POST'])
+def main2():
+    username = session.get('username')
+    if request.method == 'POST':
+        action = request.form.get('action')
+        if action == 'add':
+            if test.add_del(username,1):
+                return redirect(url_for('main2'))
+        elif action == 'del':
+            if test.add_del(username,2):
+                return redirect(url_for('main2'))
+        elif action == 'select':
+            return redirect(url_for('select_data'))
+    available_bikes = test.availablebikes()
+    print(available_bikes)
+    return render_template('main2.html', data=available_bikes)
 
 @app.route('/select', methods=['GET', 'POST'])
 def select_data():
@@ -106,21 +125,6 @@ def predict():
         return "Failed to receive image data"
 
     return render_template('img.html', img_data=img_base64)
-
-@app.route('/main2', methods=['GET','POST'])
-def main2():
-    username = session.get('username')
-    if request.method == 'POST':
-        action = request.form.get('action')
-        if action == 'add':
-            if test.add_del(username,1):
-                return redirect(url_for('main2'))
-        elif action == 'del':
-            if test.add_del(username,2):
-                return redirect(url_for('main2'))
-    available_bikes = test.availablebikes()
-    print(available_bikes)
-    return render_template('main2.html', data=available_bikes)
 
 @app.errorhandler(403)
 def handle_bad_request(e):
