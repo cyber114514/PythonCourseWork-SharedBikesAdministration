@@ -124,7 +124,7 @@ def main2():
 
 @app.errorhandler(403)
 def handle_bad_request(e):
-    return '错误请求', 403   #返回错误信息
+    return render_template('403.html'), 403   #返回错误信息
 
 if __name__ == '__main__':
     app.run(debug=True)
