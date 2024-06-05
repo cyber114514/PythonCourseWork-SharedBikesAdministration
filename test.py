@@ -21,6 +21,7 @@ class WrongUserError(Exception):
         self.msg = msg
         super().__init__(self.msg)
 def testconnect():
+    lock.acquire()
     conn = pymysql.connect(
         host='localhost',
             port=3306,
@@ -33,6 +34,7 @@ def testconnect():
     cursor = conn.cursor()
     cursor.close()
     conn.close()
+    lock.release()
 
 class Database:
     def __init__(self):
@@ -65,8 +67,8 @@ class Database:
         self.cursor.execute(sql)
 
 def query_for_position(uname):
+    lock.acquire()
     with Database() as db:
-
         message = f"select position from user where username = '{uname}'"
         try:
             result = db.query(message)
@@ -74,9 +76,12 @@ def query_for_position(uname):
             return result[0][0]
         except Exception as e:
             print(f'error:{e}')
+        finally:
+            lock.release()
 
 
 def query_for_rent(bikeid, userid):
+    lock.acquire()
     with Database() as db:
         userposition = 'select position,isrenting from user where userid=' + str(userid)
         BikeState = 'select rentable from bike where bikeid=' + str(bikeid)
@@ -100,9 +105,12 @@ def query_for_rent(bikeid, userid):
             print('Successfully rented the bike!')
         except Exception as e:
             print(f'Error: {e}')
+        finally:
+            lock.release()
 
 
 def query_for_return(bikeid, userid):
+    lock.acquire()
     with Database() as db:
         userposition = 'SELECT position, isrenting, userid FROM user WHERE userid = {}'.format(userid)
         result = db.query(userposition)
@@ -140,8 +148,11 @@ def query_for_return(bikeid, userid):
             print('Successfully returned the bike!')
         except Exception as e:
             print(f'Error: {e}')
+        finally:
+            lock.release()
 
 def query_for_add(userid):
+    lock.acquire()
     with Database() as db:
         userposition = 'SELECT position, isrenting, userid FROM user WHERE userid = {}'.format(userid)
         result = db.query(userposition)
@@ -153,8 +164,11 @@ def query_for_add(userid):
             print('Successfully added the bike!')
         except Exception as e:
             print(f'Error: {e}')
+        finally:
+            lock.release()
 
 def delete_max_bike(userid):
+    lock.acquire()
     with Database() as db:
         userposition = 'SELECT position, isrenting, userid FROM user WHERE userid = {}'.format(userid)
         result = db.query(userposition)
@@ -168,8 +182,11 @@ def delete_max_bike(userid):
             print('Successfully deleted the bike with the highest bikeid!')
         except Exception as e:
             print(f'Error: {e}')
+        finally:
+            lock.release()
 
 def register(p, uname, pwd):
+    lock.acquire()
     if len(uname) == 0 or len(pwd) == 0:
         print("empty username or password!")
         return False
@@ -182,8 +199,11 @@ def register(p, uname, pwd):
         except Exception as e:
             print(f'Error: {e}')
             return False
+        finally:
+            lock.release()
 
 def login(uname, pwd):
+    lock.acquire()
     if len(uname) == 0 or len(pwd) == 0:
         print("empty username or password!")
         return False
@@ -200,16 +220,26 @@ def login(uname, pwd):
         except Exception as e:
             print(f'Error: {e}')
             return False
+        finally:
+            lock.release()
 
 def availablebikes():
+    lock.acquire()
     with Database() as db:
-        query = 'SELECT COUNT(*) FROM bike WHERE rentable = True'
-        result = db.query(query)
-        available_bikes = int(result[0][0])
-        print(available_bikes)
-        return available_bikes
+        try:
+            query = 'SELECT COUNT(*) FROM bike WHERE rentable = True'
+            result = db.query(query)
+            available_bikes = int(result[0][0])
+            print(available_bikes)
+            return available_bikes
+        except Exception as e:
+            print(f'Error: {e}')
+        finally:
+            lock.release()
+    
 
 def rent(username):
+    lock.acquire()
     with Database() as db:
         try:
             select_user = f'SELECT userid FROM user WHERE username = "{username}"'
@@ -221,8 +251,11 @@ def rent(username):
         except Exception as e:
             print(f'Error: {e}')
             return False
+        finally:
+            lock.release()
 
 def returnbike(username):
+    lock.acquire()
     with Database() as db:
         try:
             select_user = f'SELECT userid FROM user WHERE username = "{username}"'
@@ -234,8 +267,11 @@ def returnbike(username):
         except Exception as e:
             print(f'Error: {e}')
             return False
+        finally:
+            lock.release()
 
 def add_del(username, mode):
+    lock.acquire()
     with Database() as db:
         try:
             select_user = f'SELECT userid FROM user WHERE username = "{username}"'
@@ -249,6 +285,8 @@ def add_del(username, mode):
         except Exception as e:
             print(f'Error: {e}')
             return False
+        finally:
+            lock.release()
 
 def get_mock_now():
     return mock_now
@@ -264,52 +302,59 @@ def get_data_options():
 
 def get_data_for_image(data_id):
     lock.acquire()
-    with Database() as db:
-        # 根据选择的数据ID从数据库获取数据
-        if data_id == '1': 
-            query = f'SELECT orderid, total_cost FROM orders'
-            result = db.query(query)
-            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-            x_label = '订单ID'
-            y_label = '费用'
-            title = '订单的费用分布'
-            chart_type = 'scatter'
+    with Database() as db:# 根据选择的数据ID从数据库获取数据
+        try:
+            if data_id == '1': 
+                query = f'SELECT orderid, total_cost FROM orders'
+                result = db.query(query)
+                data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+                x_label = '订单ID'
+                y_label = '费用'
+                title = '订单的费用分布'
+                chart_type = 'scatter'
 
-        elif data_id == '2':
-            query = f'SELECT orderid, total_time FROM orders'
-            result = db.query(query)
-            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-            x_label = '订单ID'
-            y_label = '租赁时间'
-            title = '订单的租赁时间分布'
-            chart_type = 'scatter'
+            elif data_id == '2':
+                query = f'SELECT orderid, total_time FROM orders'
+                result = db.query(query)
+                data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+                x_label = '订单ID'
+                y_label = '租赁时间'
+                title = '订单的租赁时间分布'
+                chart_type = 'scatter'
 
-        elif data_id == '3':
-            query = f'SELECT DATE(start_time) as order_date, COUNT(*) as order_count FROM orders GROUP BY DATE(start_time)'
-            result = db.query(query)
-            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-            x_label = '日期'
-            y_label = '订单数量'
-            title = '每天的订单数量'
-            chart_type = 'line'
+            elif data_id == '3':
+                query = f'SELECT DATE(start_time) as order_date, COUNT(*) as order_count FROM orders GROUP BY DATE(start_time)'
+                result = db.query(query)
+                data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+                x_label = '日期'
+                y_label = '订单数量'
+                title = '每天的订单数量'
+                chart_type = 'line'
 
-        else:
-            data = {'x': [], 'y': []}
-    lock.release()
-    return data, x_label, y_label, title, chart_type
+            else:
+                data = {'x': [], 'y': []}
+            return data, x_label, y_label, title, chart_type
+        except Exception as e:
+            print(f'Error: {e}')
+        finally:
+            lock.release()
 
 def get_data_for_predict():
     lock.acquire()
     with Database() as db:
-        query = '''
-            SELECT DATE(start_time) AS order_date, COUNT(*) AS order_count 
-            FROM orders 
-            GROUP BY DATE(start_time) 
-            ORDER BY order_date
-        '''
-        result = db.query(query)
-        data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
-    lock.release()
-    return data
+        try:
+            query = '''
+                SELECT DATE(start_time) AS order_date, COUNT(*) AS order_count 
+                FROM orders 
+                GROUP BY DATE(start_time) 
+                ORDER BY order_date
+            '''
+            result = db.query(query)
+            data = {'x': [row[0] for row in result], 'y': [row[1] for row in result]}
+            return data
+        except Exception as e:
+            print(f'Error: {e}')
+        finally:
+            lock.release()
 
 mock_now = datetime.now()
