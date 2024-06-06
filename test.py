@@ -312,4 +312,29 @@ def get_data_for_predict():
     lock.release()
     return data
 
+def report_issue(bikeid, userid, description):
+    report_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    report_query = f"INSERT INTO issues (bike_id, reported_by, issue_description, report_time) VALUES ({bikeid}, {userid}, '{description}', '{report_time}')"
+    setbikestate = f"UPDATE bike SET rentable = false WHERE bikeid = {bikeid}"
+    with Database() as db:
+        try:
+            db.set(report_query)
+            print('Successfully reported')
+            db.set(setbikestate)
+        except Exception as e:
+            print(f'Error:{e}')
+
+def resolve_issue(issue_id):
+    resolve_query = f"UPDATE issues SET resolved_status = TRUE WHERE issue_id = {issue_id}"
+    selectbikeid = f"SELECT bike_id FROM issues WHERE issue_id = {issue_id}"
+    with Database() as db:
+        try:
+            result = db.query(selectbikeid)
+            setbikestate = f"UPDATE bike SET rentable = true WHERE bikeid = {result[0][0]}"
+            db.set(setbikestate)
+            db.set(resolve_query)
+            print('Successfully resolved!')
+        except Exception as e:
+            print(f'Error:{e}')
+
 mock_now = datetime.now()
