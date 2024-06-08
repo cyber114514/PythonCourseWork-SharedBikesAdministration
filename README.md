@@ -47,8 +47,13 @@ modified: '2024-05-27T08:50:56.078Z'
 在对数据库的操作上增加了锁
 增加了两个网页 select供选择可视化指标 img供显示图片
 
+#### 6月8号：
+1. 将部分重复使用的较多的sql（本例中将通过username找useri）封装成函数便于使用
+2. 在main界面上显示租金
+
 ### mysql建表语句
 请首先创建数据库bike，并选为默认数据库，以下是建表语句：（新增orders表）
+
 ### user：
 CREATE TABLE `user` (<br>
   `userid` int NOT NULL AUTO_INCREMENT,<br>

@@ -54,8 +54,9 @@ def main():
             if test.rent(username):
                 return redirect(url_for('main'))
         elif action == 'return':
-            if test.returnbike(username):
-                return redirect(url_for('main'))
+            fees = test.returnbike(username)
+            available_bikes = test.availablebikes()
+            return render_template('main.html', data=available_bikes, fees=fees)
         elif action == 'select':
             return redirect(url_for('select_data'))
     available_bikes = test.availablebikes()

@@ -136,8 +136,8 @@ def query_for_return(bikeid, userid):
             update_order = "UPDATE orders SET end_time = '{}', total_time = {}, total_cost = {} WHERE userid = {} AND bikeid = {} AND end_time IS NULL".format(
                 end_time.strftime('%Y-%m-%d %H:%M:%S'), total_time, total_cost, userid, bikeid)
             db.set(update_order)
-
             print('Successfully returned the bike!')
+            return total_cost
         except Exception as e:
             print(f'Error: {e}')
 
@@ -212,34 +212,28 @@ def availablebikes():
 def rent(username):
     with Database() as db:
         try:
-            select_user = f'SELECT userid FROM user WHERE username = "{username}"'
-            result1 = db.query(select_user)
+            result1 = select_user(username)
             query = 'SELECT bikeid FROM bike WHERE rentable = True'
             result2 = db.query(query)
             query_for_rent(result2[0][0], result1[0][0])
-            return True
         except Exception as e:
             print(f'Error: {e}')
-            return False
 
 def returnbike(username):
     with Database() as db:
         try:
-            select_user = f'SELECT userid FROM user WHERE username = "{username}"'
-            result1 = db.query(select_user)
+            result1 = select_user(username)
             query = f'SELECT bikeid FROM bike WHERE userid = "{result1[0][0]}"'
             result2 = db.query(query)
-            query_for_return(result2[0][0], result1[0][0])
-            return True
+            fees = query_for_return(result2[0][0], result1[0][0])
+            return fees
         except Exception as e:
             print(f'Error: {e}')
-            return False
 
 def add_del(username, mode):
     with Database() as db:
         try:
-            select_user = f'SELECT userid FROM user WHERE username = "{username}"'
-            result1 = db.query(select_user)
+            result1 = select_user(username)
             if mode == 1:
                 query_for_add(result1[0][0])
                 return True
@@ -336,5 +330,10 @@ def resolve_issue(issue_id):
             print('Successfully resolved!')
         except Exception as e:
             print(f'Error:{e}')
+
+def select_user(username):
+    with Database() as db:
+        select_users = f"SELECT userid FROM user WHERE username = '{username}'"
+        return db.query(select_users)
 
 mock_now = datetime.now()

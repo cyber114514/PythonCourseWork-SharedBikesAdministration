@@ -1,10 +1,39 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>issues</title>
+  <meta charset="utf-8">
+  <title>issues</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      display: inline-block;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    input[type="text"],
+    input[type="content"] {
+      width: 200px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
-
+  <h2>请输入你要提交的内容</h2>
+  <form method="post" action="/login">
+    <label for="content">账号:</label>
+    <input type="text" id="content" name="content">
+    <br>
+    <input type="submit" value="提交">
+  </form>
 </body>
 </html>
