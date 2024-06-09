@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>issues</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    form {
+      display: inline-block;
+      text-align: left;
+    }
+    label {
+      display: block;
+      margin-bottom: 10px;
+    }
+    .info-box {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #007bff;
+      display: inline-block;
+    }
+    input[type="text"],
+    input[type="content"] {
+      width: 200px;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="info-box">
+    目前存在问题的车辆：<span id="data-info">{{ data }}</span>
+  </div>
+  <h2>请输入你要修复的车辆</h2>
+  <form method="POST" action="/solve">
+    <input type="text" id="content" name="content">
+    <br>
+    <input type="submit" value="提交">
+  </form>
+</body>
+</html>

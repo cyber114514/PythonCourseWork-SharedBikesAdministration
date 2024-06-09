@@ -77,6 +77,8 @@ def main2():
                 return redirect(url_for('main2'))
         elif action == 'select':
             return redirect(url_for('select_data'))
+        elif action == 'issue':
+            return redirect(url_for('solve'))
     available_bikes = test.availablebikes()
     print(available_bikes)
     return render_template('main2.html', data=available_bikes)
@@ -136,6 +138,14 @@ def issue():
     userid = test.select_user(username)[0][0]
     test.report_issue(userid, text)
     return render_template('issue.html')
+
+@app.route('/solve', methods=['GET','POST'])
+def solve():
+    text = request.form.get('content')
+    arr = test.query_for_issue()
+    print(text)
+    test.resolve_issue(text)
+    return render_template('solve.html', data=arr)
 
 @app.errorhandler(403)
 def handle_bad_request(e):

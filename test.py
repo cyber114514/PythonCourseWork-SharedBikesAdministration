@@ -322,14 +322,14 @@ def report_issue(userid, description):
         except Exception as e:
             print(f'Error:{e}')
 
-def resolve_issue(issue_id):
-    resolve_query = f"UPDATE issues SET resolved_status = TRUE WHERE issue_id = {issue_id}"
-    selectbikeid = f"SELECT bike_id FROM issues WHERE issue_id = {issue_id}"
+def resolve_issue(bikeid):
+    resolve_query = f"UPDATE issues SET resolved_status = TRUE WHERE bike_id = {bikeid}"
+    #selectbikeid = f"SELECT bike_id FROM issues WHERE bike_id = {bikeid}"
     with Database() as db:
         try:
-            result = db.query(selectbikeid)
-            setbikestate = f"UPDATE bike SET rentable = true WHERE bikeid = {result[0][0]}"
-            db.set(setbikestate)
+            #result = db.query(selectbikeid)
+            #setbikestate = f"UPDATE bike SET rentable = true WHERE bikeid = {result[0][0]}"
+            #db.set(setbikestate)
             db.set(resolve_query)
             print('Successfully resolved!')
         except Exception as e:
@@ -340,6 +340,18 @@ def select_user(username):
         select_users = f"SELECT userid FROM user WHERE username = '{username}'"
         return db.query(select_users)
 
-mock_now = datetime.now()
+def query_for_issue():
+    with Database() as db:
+        try:
+            bikeid = 'select bike_id from issues where resolved_status = 0 group by bike_id '
+            result1 = db.query(bikeid)
+            print(result1)
+            array = []
+            for i in result1:
+                print(i[0])
+                array.append(i[0])
+            return array
+        except Exception as e:
+            print(f'Error:{e}')
 
-print(select_user('aaaaa'))
+mock_now = datetime.now()
