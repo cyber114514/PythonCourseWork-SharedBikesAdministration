@@ -76,7 +76,7 @@ def main2():
             if test.add_del(username,2):
                 return redirect(url_for('main2'))
         elif action == 'select':
-            return render_template('issue.html')
+            return redirect(url_for('select_data'))
     available_bikes = test.availablebikes()
     print(available_bikes)
     return render_template('main2.html', data=available_bikes)
