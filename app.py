@@ -57,8 +57,9 @@ def main():
             fees = test.returnbike(username)
             available_bikes = test.availablebikes()
             return render_template('main.html', data=available_bikes, fees=fees)
-        elif action == 'select':
-            return redirect(url_for('select_data'))
+        elif action == 'issue':
+            session['username'] = username
+            return redirect(url_for('issue'))
     available_bikes = test.availablebikes()
     print(available_bikes)
     return render_template('main.html', data=available_bikes)
@@ -75,7 +76,7 @@ def main2():
             if test.add_del(username,2):
                 return redirect(url_for('main2'))
         elif action == 'select':
-            return redirect(url_for('select_data'))
+            return render_template('issue.html')
     available_bikes = test.availablebikes()
     print(available_bikes)
     return render_template('main2.html', data=available_bikes)
@@ -126,6 +127,15 @@ def predict():
         return "Failed to receive image data"
 
     return render_template('img.html', img_data=img_base64)
+
+@app.route('/issue', methods=['GET','POST'])
+def issue():
+    username = session.get('username')
+    text = request.form.get('content')
+    print(text)
+    userid = test.select_user(username)[0][0]
+    test.report_issue(userid, text)
+    return render_template('issue.html')
 
 @app.errorhandler(403)
 def handle_bad_request(e):

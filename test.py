@@ -306,15 +306,19 @@ def get_data_for_predict():
     lock.release()
     return data
 
-def report_issue(bikeid, userid, description):
+def report_issue(userid, description):
     report_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    report_query = f"INSERT INTO issues (bike_id, reported_by, issue_description, report_time) VALUES ({bikeid}, {userid}, '{description}', '{report_time}')"
-    setbikestate = f"UPDATE bike SET rentable = false WHERE bikeid = {bikeid}"
     with Database() as db:
         try:
+            queryforbikeid = f'SELECT bikeid FROM orders WHERE userid = {userid} AND end_time is NULL'
+            bikeid = db.query(queryforbikeid)[0][0]
+            report_query = f"INSERT INTO issues (bike_id, reported_by, issue_description, report_time) VALUES ({bikeid}, {userid}, '{description}', '{report_time}')"
+            setbikestate = f"UPDATE bike SET rentable = false WHERE bikeid = {bikeid}"
             db.set(report_query)
-            print('Successfully reported')
+            deletenones = f"DELETE FROM `issues` WHERE `issue_id` IN (SELECT * FROM (SELECT `issue_id` FROM `issues` WHERE `issue_description` = 'None') AS temp_table);"
+            db.set(deletenones)
             db.set(setbikestate)
+            print('Successfully reported')
         except Exception as e:
             print(f'Error:{e}')
 
@@ -337,3 +341,5 @@ def select_user(username):
         return db.query(select_users)
 
 mock_now = datetime.now()
+
+print(select_user('aaaaa'))
