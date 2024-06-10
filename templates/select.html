@@ -3,6 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <title>Select Data</title>
+    <style>
+        .button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px; /* 基本间距 */
+            cursor: pointer;
+        }
+        /* 为表单按钮和预测按钮添加更大的间距 */
+        form button, .button {
+            margin: 20px 5px; /* 调整为需要的间距 */
+        }
+    </style>
+    <script>
+        function redirectToPredict() {
+            window.location.href = '/predict';
+        }
+    </script>
 </head>
 <body>
     <h1>请选择你想查看的数据可视化指标</h1>
@@ -15,5 +34,6 @@
         </select>
         <button type="submit">确定</button>
     </form>
+    <button class="button" onclick="redirectToPredict()">预测未来订单数量</button>
 </body>
 </html>

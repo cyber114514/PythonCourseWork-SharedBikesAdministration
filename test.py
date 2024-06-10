@@ -24,7 +24,7 @@ def testconnect():
     conn = pymysql.connect(
         host='localhost',
         port=3306,
-        user='root',
+        user='flaskuser',
         password='123456',
         charset='utf8mb4',
         db='bike'
@@ -39,7 +39,7 @@ class Database:
         self.conn = pymysql.connect(
             host='localhost',
             port=3306,
-            user='root',
+            user='flaskuser',
             password='123456',
             charset='utf8mb4',
             db='bike'
@@ -231,6 +231,7 @@ def returnbike(username):
             print(f'Error: {e}')
 
 def add_del(username, mode):
+    lock.acquire()
     with Database() as db:
         try:
             result1 = select_user(username)
@@ -243,6 +244,8 @@ def add_del(username, mode):
         except Exception as e:
             print(f'Error: {e}')
             return False
+        finally:
+            lock.release()
 
 def get_mock_now():
     return mock_now
