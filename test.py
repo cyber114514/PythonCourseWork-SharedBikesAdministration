@@ -24,7 +24,7 @@ def testconnect():
     conn = pymysql.connect(
         host='localhost',
         port=3306,
-        user='flaskuser',
+        user='root',
         password='123456',
         charset='utf8mb4',
         db='bike'
@@ -39,7 +39,7 @@ class Database:
         self.conn = pymysql.connect(
             host='localhost',
             port=3306,
-            user='flaskuser',
+            user='root',
             password='123456',
             charset='utf8mb4',
             db='bike'
@@ -346,13 +346,13 @@ def select_user(username):
 def query_for_issue():
     with Database() as db:
         try:
-            bikeid = 'select bike_id from issues where resolved_status = 0 group by bike_id '
+            bikeid = 'select bike_id,issue_description from issues where resolved_status = 0 group by bike_id,issue_description '
             result1 = db.query(bikeid)
             print(result1)
             array = []
             for i in result1:
-                print(i[0])
-                array.append(i[0])
+                print(i)
+                array.append(i)
             return array
         except Exception as e:
             print(f'Error:{e}')

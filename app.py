@@ -85,6 +85,10 @@ def main2():
 
 @app.route('/select', methods=['GET', 'POST'])
 def select_data():
+    username = session['username']
+    position = test.query_for_position(username)
+    if position == 'customer':
+        return ('没有权限访问')
     if request.method == 'POST':
         return redirect(url_for('img', data_selection=request.form['data_selection']))
     else:
@@ -142,14 +146,15 @@ def issue():
 @app.route('/solve', methods=['GET','POST'])
 def solve():
     text = request.form.get('content')
-    arr = test.query_for_issue()
+    a = test.query_for_issue()
+    print(a)
     print(text)
     test.resolve_issue(text)
-    return render_template('solve.html', data=arr)
+    return render_template('solve.html', data=a)
 
 @app.errorhandler(403)
 def handle_bad_request(e):
     return render_template('403.html'), 403   #返回错误信息
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',port = 5000)
